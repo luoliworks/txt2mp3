@@ -30,9 +30,9 @@ Convert large novel.txt file to mp3 files using [IndexTTS-2.5](https://github.co
 7. Double-click `convert.bat`.
 
 The script splits `novel.txt` into `novel/` and writes MP3 files to `mp3/`.
-The first run also downloads the voice sample and auxiliary models, so it needs
-internet access. Existing MP3 files are skipped; use `convert.bat --overwrite`
-to regenerate them.
+Every run of `convert.bat` first clears both folders, so all chapters are
+regenerated from scratch. The first run also downloads the voice sample and
+auxiliary models, so it needs internet access.
 
 The default voice is `examples/voice_11.wav`. Override it with `--voice`:
 
@@ -55,14 +55,8 @@ browser to preview them.
 - Internet access on first run (voice sample and auxiliary models are downloaded automatically)
 
 ## One-click conversion (Windows)
-Double-click `convert.bat`. It splits `novel.txt` and then converts every chapter
-in `novel/` to MP3 in `mp3/`.
-
-Existing MP3 files are skipped; to regenerate them run:
-
-```bat
-convert.bat --overwrite
-```
+Double-click `convert.bat`. On every run it first clears `novel/` and `mp3/`,
+then splits `novel.txt` and converts every chapter in `novel/` to MP3 in `mp3/`.
 
 ## Split novel into chapters
 Place `novel.txt` in the project root, then run:
@@ -88,8 +82,9 @@ Convert every file in `novel/` to MP3 in `mp3/`:
 uv run python txt2mp3.py
 ```
 
-Output files keep the chapter name, e.g. `novel/0001.txt` → `mp3/0001.mp3`. Existing
-MP3 files are skipped unless `--overwrite` is given.
+Output files keep the chapter name, e.g. `novel/0001.txt` → `mp3/0001.mp3`. When
+running this script directly, existing MP3 files are skipped unless `--overwrite`
+is given (`convert.bat` already clears `mp3/`).
 
 Options:
 

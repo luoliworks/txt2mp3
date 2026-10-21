@@ -16,7 +16,14 @@ if not exist "novel.txt" (
     exit /b 1
 )
 
-echo [1/2] Splitting novel.txt into chapters...
+echo [1/3] Clearing novel and mp3 folders...
+if exist "novel" rmdir /s /q "novel"
+if exist "mp3" rmdir /s /q "mp3"
+if exist "novel" goto clear_error
+if exist "mp3" goto clear_error
+
+echo.
+echo [2/3] Splitting novel.txt into chapters...
 uv run python split_novel.py
 if errorlevel 1 (
     echo [ERROR] Splitting failed.
@@ -25,7 +32,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/2] Converting chapters to MP3...
+echo [3/3] Converting chapters to MP3...
 uv run python txt2mp3.py %*
 if errorlevel 1 (
     echo [ERROR] Conversion failed.
@@ -36,3 +43,9 @@ if errorlevel 1 (
 echo.
 echo Done. MP3 files are in the mp3 folder.
 pause
+exit /b 0
+
+:clear_error
+echo [ERROR] Could not clear the novel or mp3 folder. Close any program using those files and try again.
+pause
+exit /b 1

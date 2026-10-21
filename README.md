@@ -92,6 +92,9 @@ Output files keep the chapter name, e.g. `novel/0001.txt` → `mp3/0001.mp3`. Wh
 running this script directly, existing MP3 files are skipped unless `--overwrite`
 is given (`convert.bat` already clears `mp3/`).
 
+While converting, the console shows the current file, the current TTS segment
+text, that file's progress, and the overall progress.
+
 Options:
 
 - `--voice PATH` reference voice wav (default: `examples/voice_09.wav`, auto-downloaded)

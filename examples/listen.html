@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>IndexTTS 官方示例音色试听</title>
+<style>
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; max-width: 900px; margin: 32px auto; padding: 0 16px; background: #1e1e1e; color: #ddd; }
+  h1 { font-size: 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #333; vertical-align: middle; }
+  th { color: #999; font-weight: normal; font-size: 13px; }
+  audio { width: 340px; max-width: 100%; height: 34px; }
+  .name { font-family: Consolas, monospace; }
+  .note { color: #888; font-size: 13px; margin-top: 20px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<h1>IndexTTS 官方示例音色试听</h1>
+<table>
+  <thead><tr><th>文件</th><th>时长</th><th>试听</th></tr></thead>
+  <tbody>
+    <tr><td class="name">voice_01.wav</td><td>2.4s</td><td><audio controls preload="none" src="voice_01.wav"></audio></td></tr>
+    <tr><td class="name">voice_02.wav</td><td>2.9s</td><td><audio controls preload="none" src="voice_02.wav"></audio></td></tr>
+    <tr><td class="name">voice_03.wav</td><td>2.1s</td><td><audio controls preload="none" src="voice_03.wav"></audio></td></tr>
+    <tr><td class="name">voice_04.wav</td><td>2.3s</td><td><audio controls preload="none" src="voice_04.wav"></audio></td></tr>
+    <tr><td class="name">voice_05.wav</td><td>8.4s</td><td><audio controls preload="none" src="voice_05.wav"></audio></td></tr>
+    <tr><td class="name">voice_06.wav</td><td>6.2s</td><td><audio controls preload="none" src="voice_06.wav"></audio></td></tr>
+    <tr><td class="name">voice_07.wav</td><td>2.0s</td><td><audio controls preload="none" src="voice_07.wav"></audio></td></tr>
+    <tr><td class="name">voice_08.wav</td><td>1.5s</td><td><audio controls preload="none" src="voice_08.wav"></audio></td></tr>
+    <tr><td class="name">voice_09.wav</td><td>10.2s</td><td><audio controls preload="none" src="voice_09.wav"></audio></td></tr>
+    <tr><td class="name">voice_11.wav</td><td>7.9s</td><td><audio controls preload="none" src="voice_11.wav"></audio></td></tr>
+    <tr><td class="name">voice_12.wav</td><td>2.7s</td><td><audio controls preload="none" src="voice_12.wav"></audio></td></tr>
+    <tr><td class="name">emo_hate.wav</td><td>0.5s</td><td><audio controls preload="none" src="emo_hate.wav"></audio></td></tr>
+    <tr><td class="name">emo_sad.wav</td><td>2.9s</td><td><audio controls preload="none" src="emo_sad.wav"></audio></td></tr>
+  </tbody>
+</table>
+<p class="note">voice_XX 是官方音色参考；emo_hate / emo_sad 是情感参考，不是朗读音色。官方没有 voice_10。<br>
+选好音色后：<code>convert.bat --voice examples\voice_05.wav --overwrite</code></p>
+</body>
+</html>

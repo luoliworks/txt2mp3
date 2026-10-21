@@ -34,6 +34,17 @@ The first run also downloads the voice sample and auxiliary models, so it needs
 internet access. Existing MP3 files are skipped; use `convert.bat --overwrite`
 to regenerate them.
 
+The default voice is `examples/voice_11.wav`. Override it with `--voice`:
+
+```bat
+convert.bat --voice examples\voice_06.wav
+```
+
+`voice_06.wav` is a male voice.
+
+All official voice samples are in `examples/`; open `examples/listen.html` in a
+browser to preview them.
+
 ## Requirements
 - Python 3.11 (required: `>=3.10,<3.12`, pinned in `.python-version`; uv installs it automatically)
 - [uv](https://docs.astral.sh/uv/)
@@ -80,7 +91,7 @@ MP3 files are skipped unless `--overwrite` is given.
 
 Options:
 
-- `--voice PATH` reference voice wav (default: `examples/voice_01.wav`, auto-downloaded)
+- `--voice PATH` reference voice wav (default: `examples/voice_11.wav`, auto-downloaded)
 - `--lang ZH` language: `ZH`, `EN`, `JA`, `ES`, `AR`
 - `--device cuda:0` torch device (default: auto-detect)
 - `--bf16` use bfloat16 (recommended on Ampere or newer GPUs)

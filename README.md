@@ -34,15 +34,15 @@ Every run of `convert.bat` first clears both folders, so all chapters are
 regenerated from scratch. The first run also downloads the voice sample and
 auxiliary models, so it needs internet access.
 
-The default voice is `examples/voice_11.wav`. Override it with `--voice`:
+The default voice is `examples/voice_09.wav`. Override it with `--voice`:
 
 ```bat
 convert.bat --voice examples\voice_06.wav
 ```
 
-`voice_11.wav` is a female voice (default, high pitch).
+`voice_09.wav` is a female voice (default).
 `voice_06.wav` is a male voice.
-`voice_09.wav` is a female voice.
+`voice_11.wav` is a female voice (high pitch).
 
 All official voice samples are in `examples/`; open `examples/listen.html` in a
 browser to preview them.
@@ -88,7 +88,7 @@ is given (`convert.bat` already clears `mp3/`).
 
 Options:
 
-- `--voice PATH` reference voice wav (default: `examples/voice_11.wav`, auto-downloaded)
+- `--voice PATH` reference voice wav (default: `examples/voice_09.wav`, auto-downloaded)
 - `--lang ZH` language: `ZH`, `EN`, `JA`, `ES`, `AR`
 - `--device cuda:0` torch device (default: auto-detect)
 - `--bf16` use bfloat16 (recommended on Ampere or newer GPUs)

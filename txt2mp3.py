@@ -9,10 +9,10 @@ import time
 from pathlib import Path
 
 DEFAULT_CHECKPOINTS = "checkpoints"
-DEFAULT_VOICE = "examples/voice_11.wav"
+DEFAULT_VOICE = "examples/voice_09.wav"
 VOICE_URL = (
     "https://huggingface.co/spaces/IndexTeam/IndexTTS-2-Demo"
-    "/resolve/main/examples/voice_11.wav"
+    "/resolve/main/examples/voice_09.wav"
 )
 
 CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x85\xa0]+")

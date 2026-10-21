@@ -25,11 +25,9 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/4] Clearing novel and mp3 folders...
+echo [2/4] Clearing novel folder...
 if exist "novel" rmdir /s /q "novel"
-if exist "mp3" rmdir /s /q "mp3"
 if exist "novel" goto clear_error
-if exist "mp3" goto clear_error
 
 echo.
 echo [3/4] Splitting novel.txt into chapters...
@@ -55,6 +53,6 @@ pause
 exit /b 0
 
 :clear_error
-echo [ERROR] Could not clear the novel or mp3 folder. Close any program using those files and try again.
+echo [ERROR] Could not clear the novel folder. Close any program using those files and try again.
 pause
 exit /b 1

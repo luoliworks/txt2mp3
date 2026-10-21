@@ -34,9 +34,10 @@ Convert large novel.txt file to mp3 files using [IndexTTS-2.5](https://github.co
 
 The script splits `novel.txt` into `novel/` and writes MP3 files to `mp3/`.
 Every run of `convert.bat` first converts `novel.txt` to UTF-8 if needed, then
-clears both folders, so all chapters are regenerated from scratch. The first run
-also downloads the voice sample and auxiliary models, so it needs internet
-access.
+clears `novel/`, so all chapters are regenerated from scratch. Existing MP3
+files in `mp3/` are kept; a same-name file is renamed to `NNNN-Copy.mp3` before
+the new file is written. The first run also downloads the voice sample and
+auxiliary models, so it needs internet access.
 
 The default voice is `examples/voice_09.wav`. Override it with `--voice`:
 
@@ -61,8 +62,8 @@ browser to preview them.
 ## One-click conversion (Windows)
 Run `convert.bat --bf16` in a terminal (or double-click `convert.bat` to run
 without bf16). On every run it first converts `novel.txt` to UTF-8, clears
-`novel/` and `mp3/`, then splits `novel.txt` and converts every chapter in
-`novel/` to MP3 in `mp3/`.
+`novel/`, then splits `novel.txt` and converts every chapter in `novel/` to MP3
+in `mp3/`. Existing MP3 files are preserved and backed up with a `-Copy` suffix.
 
 ## Split novel into chapters
 Place `novel.txt` in the project root, then run:
@@ -88,9 +89,9 @@ Convert every file in `novel/` to MP3 in `mp3/`:
 uv run python txt2mp3.py
 ```
 
-Output files keep the chapter name, e.g. `novel/0001.txt` → `mp3/0001.mp3`. When
-running this script directly, existing MP3 files are skipped unless `--overwrite`
-is given (`convert.bat` already clears `mp3/`).
+Output files keep the chapter name, e.g. `novel/0001.txt` → `mp3/0001.mp3`. If
+`mp3/0001.mp3` already exists, it is renamed to `mp3/0001-Copy.mp3` before the
+new file is written (then `0001-Copy2.mp3`, and so on).
 
 While converting, the console shows the current file, the current TTS segment
 text, that file's progress, and the overall progress.
@@ -104,7 +105,7 @@ Options:
 - `--bitrate 64k` MP3 bitrate
 - `--max-tokens 100` max text tokens per synthesis segment
 - `--duration-factor 1.0` speech duration factor, `0.5`–`2.0` (`1.1`–`1.2` slows down a rushed voice)
-- `--overwrite` regenerate existing MP3 files
+- `--overwrite` replace existing MP3 files without creating a backup
 - `--verbose` print detailed IndexTTS logs
 
 > CPU note: without an NVIDIA GPU IndexTTS runs on CPU at roughly 18x real time

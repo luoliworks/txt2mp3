@@ -127,7 +127,16 @@ def ensure_voice(path):
     path.write_bytes(response.content)
 
 
-def convert_to_mp3(ffmpeg, wav_path, mp3_path, bitrate):
+def next_backup_path(mp3_path):
+    backup_path = mp3_path.with_name(f"{mp3_path.stem}-Copy{mp3_path.suffix}")
+    index = 2
+    while backup_path.exists():
+        backup_path = mp3_path.with_name(f"{mp3_path.stem}-Copy{index}{mp3_path.suffix}")
+        index += 1
+    return backup_path
+
+
+def convert_to_mp3(ffmpeg, wav_path, mp3_path, bitrate, overwrite=False):
     tmp_path = mp3_path.with_suffix(".tmp.mp3")
     cmd = [
         ffmpeg,
@@ -144,6 +153,10 @@ def convert_to_mp3(ffmpeg, wav_path, mp3_path, bitrate):
         str(tmp_path),
     ]
     subprocess.run(cmd, check=True)
+    if not overwrite and mp3_path.exists():
+        backup_path = next_backup_path(mp3_path)
+        os.replace(mp3_path, backup_path)
+        print(f"  Backed up {mp3_path.name} -> {backup_path.name}", flush=True)
     os.replace(tmp_path, mp3_path)
 
 
@@ -175,7 +188,11 @@ def parse_args():
         help="Speech duration factor, 0.5-2.0 (>1 is slower, default: 1.0)",
     )
     parser.add_argument("--bf16", action="store_true", help="Use bfloat16 on GPU")
-    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing mp3 files")
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Overwrite existing mp3 files without creating a backup",
+    )
     parser.add_argument("--verbose", action="store_true", help="Verbose IndexTTS output")
     return parser.parse_args()
 
@@ -225,10 +242,6 @@ def main():
     pending = []
     for txt_path in txt_files:
         mp3_path = output_dir / f"{txt_path.stem}.mp3"
-        if mp3_path.is_file() and not args.overwrite:
-            print(f"Skip existing {mp3_path}")
-            continue
-
         text = clean_text(txt_path.read_text(encoding="utf-8-sig"))
         if not text:
             print(f"Skip empty {txt_path}")
@@ -273,7 +286,13 @@ def main():
                     )
                     if not wav_path.is_file():
                         raise RuntimeError("IndexTTS did not produce a wav file")
-                    convert_to_mp3(ffmpeg, wav_path, mp3_path, args.bitrate)
+                    convert_to_mp3(
+                        ffmpeg,
+                        wav_path,
+                        mp3_path,
+                        args.bitrate,
+                        overwrite=args.overwrite,
+                    )
             except Exception as exc:
                 failures += 1
                 print(f"  Failed: {exc}")

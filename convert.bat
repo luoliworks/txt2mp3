@@ -16,14 +16,23 @@ if not exist "novel.txt" (
     exit /b 1
 )
 
-echo [1/3] Clearing novel and mp3 folders...
+echo [1/4] Converting novel.txt to UTF-8...
+uv run python txt2utf8.py
+if errorlevel 1 (
+    echo [ERROR] UTF-8 conversion failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [2/4] Clearing novel and mp3 folders...
 if exist "novel" rmdir /s /q "novel"
 if exist "mp3" rmdir /s /q "mp3"
 if exist "novel" goto clear_error
 if exist "mp3" goto clear_error
 
 echo.
-echo [2/3] Splitting novel.txt into chapters...
+echo [3/4] Splitting novel.txt into chapters...
 uv run python split_novel.py
 if errorlevel 1 (
     echo [ERROR] Splitting failed.
@@ -32,7 +41,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/3] Converting chapters to MP3...
+echo [4/4] Converting chapters to MP3...
 uv run python txt2mp3.py %*
 if errorlevel 1 (
     echo [ERROR] Conversion failed.

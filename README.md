@@ -26,13 +26,15 @@ Convert large novel.txt file to mp3 files using [IndexTTS-2.5](https://github.co
    ```bash
    uv run hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints
    ```
-6. Put your `novel.txt` in the project root, next to `convert.bat`.
+6. Put your `novel.txt` in the project root, next to `convert.bat`. UTF-8 is not
+   required; GBK/GB18030 and UTF-16 are converted automatically.
 7. Double-click `convert.bat`.
 
 The script splits `novel.txt` into `novel/` and writes MP3 files to `mp3/`.
-Every run of `convert.bat` first clears both folders, so all chapters are
-regenerated from scratch. The first run also downloads the voice sample and
-auxiliary models, so it needs internet access.
+Every run of `convert.bat` first converts `novel.txt` to UTF-8 if needed, then
+clears both folders, so all chapters are regenerated from scratch. The first run
+also downloads the voice sample and auxiliary models, so it needs internet
+access.
 
 The default voice is `examples/voice_09.wav`. Override it with `--voice`:
 

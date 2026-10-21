@@ -1,17 +1,54 @@
 # txt2mp3
 Convert large novel.txt file to mp3 files using [IndexTTS-2.5](https://github.com/index-tts/index-tts).
 
+## Quick start (Windows)
+
+1. Install [uv](https://docs.astral.sh/uv/) in PowerShell:
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+2. Install ffmpeg (for MP3 encoding) with winget:
+   ```powershell
+   winget install --id Gyan.FFmpeg -e
+   ```
+   Reopen the terminal (or sign out/in) so the updated `PATH` takes effect.
+3. Clone the project and enter it (install [Git](https://git-scm.com/downloads)
+   first, or download the ZIP from GitHub and extract it):
+   ```bash
+   git clone https://github.com/luoliworks/txt2mp3.git
+   cd txt2mp3
+   ```
+4. Install dependencies (uv also installs the pinned Python 3.11 automatically):
+   ```bash
+   uv sync
+   ```
+5. Download the IndexTTS-2.5 model weights (~10 GB):
+   ```bash
+   uv run hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints
+   ```
+6. Put your `novel.txt` in the project root, next to `convert.bat`.
+7. Double-click `convert.bat`.
+
+The script splits `novel.txt` into `novel/` and writes MP3 files to `mp3/`.
+The first run also downloads the voice sample and auxiliary models, so it needs
+internet access. Existing MP3 files are skipped; use `convert.bat --overwrite`
+to regenerate them.
+
 ## Requirements
-- Python 3.11 (required: `>=3.10,<3.12`, pinned in `.python-version`)
+- Python 3.11 (required: `>=3.10,<3.12`, pinned in `.python-version`; uv installs it automatically)
 - [uv](https://docs.astral.sh/uv/)
 - [ffmpeg](https://ffmpeg.org/) in `PATH` (for MP3 encoding)
 - ~10 GB free disk space for model weights
 - Internet access on first run (voice sample and auxiliary models are downloaded automatically)
 
-## Setup
-```bash
-uv sync
-uv run hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints
+## One-click conversion (Windows)
+Double-click `convert.bat`. It splits `novel.txt` and then converts every chapter
+in `novel/` to MP3 in `mp3/`.
+
+Existing MP3 files are skipped; to regenerate them run:
+
+```bat
+convert.bat --overwrite
 ```
 
 ## Split novel into chapters

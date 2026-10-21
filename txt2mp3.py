@@ -72,11 +72,11 @@ def parse_args():
         default=None,
         help="Torch device, e.g. cpu or cuda:0 (default: auto-detect)",
     )
-    parser.add_argument("--bitrate", default="192k", help="MP3 bitrate")
+    parser.add_argument("--bitrate", default="64k", help="MP3 bitrate")
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=120,
+        default=100,
         help="Max text tokens per synthesis segment",
     )
     parser.add_argument(

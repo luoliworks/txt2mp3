@@ -28,7 +28,9 @@ Convert large novel.txt file to mp3 files using [IndexTTS-2.5](https://github.co
    ```
 6. Put your `novel.txt` in the project root, next to `convert.bat`. UTF-8 is not
    required; GBK/GB18030 and UTF-16 are converted automatically.
-7. Double-click `convert.bat`.
+7. On low-VRAM GPUs (6 GB, etc.), run `convert.bat --bf16` in a terminal. bf16
+   reduces VRAM usage and is recommended for NVIDIA RTX 30 series and newer,
+   such as the RTX 3050 6 GB (double-clicking `convert.bat` runs without it).
 
 The script splits `novel.txt` into `novel/` and writes MP3 files to `mp3/`.
 Every run of `convert.bat` first converts `novel.txt` to UTF-8 if needed, then
@@ -57,8 +59,10 @@ browser to preview them.
 - Internet access on first run (voice sample and auxiliary models are downloaded automatically)
 
 ## One-click conversion (Windows)
-Double-click `convert.bat`. On every run it first clears `novel/` and `mp3/`,
-then splits `novel.txt` and converts every chapter in `novel/` to MP3 in `mp3/`.
+Run `convert.bat --bf16` in a terminal (or double-click `convert.bat` to run
+without bf16). On every run it first converts `novel.txt` to UTF-8, clears
+`novel/` and `mp3/`, then splits `novel.txt` and converts every chapter in
+`novel/` to MP3 in `mp3/`.
 
 ## Split novel into chapters
 Place `novel.txt` in the project root, then run:

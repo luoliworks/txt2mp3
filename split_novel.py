@@ -52,6 +52,16 @@ def cn_to_int(text):
     return total + section + number
 
 
+TITLE_PAUSE_PATTERN = re.compile(
+    r"^(?P<marker>"
+    r"第[ \t\u3000]*(?:[0-9]+|[零〇一二两三四五六七八九十百千万]+)[ \t\u3000]*章"
+    r"|Chapter[ \t]+[0-9]+\b"
+    r")(?P<rest>.*)$",
+    re.IGNORECASE,
+)
+TITLE_REST_SEPARATORS = re.compile(r"^[ \t\u3000｜|:：、,，.。·\-—~～…]+")
+
+
 def get_chapter_number(match):
     cn = match.group("cn")
     en = match.group("en")
@@ -60,6 +70,16 @@ def get_chapter_number(match):
     if cn.isdigit():
         return int(cn)
     return cn_to_int(cn)
+
+
+def add_title_pause(title):
+    match = TITLE_PAUSE_PATTERN.match(title)
+    if match is None:
+        return title
+    rest = TITLE_REST_SEPARATORS.sub("", match.group("rest")).strip()
+    if not rest:
+        return title
+    return f"{match.group('marker').strip()}…… {rest}"
 
 
 def split_chapters(content):
@@ -95,7 +115,7 @@ def main():
 
         # 保存章节到文件
         with open(filepath, "w", encoding="utf-8") as chapter_file:
-            chapter_file.write(f"{title}\n\n{body}")
+            chapter_file.write(f"{add_title_pause(title)}\n……\n{body}")
 
     print(f"章节已拆分并保存到 {output_dir}")
 

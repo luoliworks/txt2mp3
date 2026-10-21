@@ -2,4 +2,9 @@
 name = "txt2mp3"
 version = "0.1.0"
 requires-python = ">=3.10,<3.12"
-dependencies = []
+dependencies = [
+    "indextts",
+]
+
+[tool.uv.sources]
+indextts = { git = "https://github.com/index-tts/index-tts.git", rev = "v2.5.0" }

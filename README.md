@@ -86,6 +86,7 @@ Options:
 - `--bf16` use bfloat16 (recommended on Ampere or newer GPUs)
 - `--bitrate 192k` MP3 bitrate
 - `--max-tokens 120` max text tokens per synthesis segment
+- `--duration-factor 1.0` speech duration factor, `0.5`–`2.0` (`1.1`–`1.2` slows down a rushed voice)
 - `--overwrite` regenerate existing MP3 files
 - `--verbose` print detailed IndexTTS logs
 

@@ -79,6 +79,12 @@ def parse_args():
         default=120,
         help="Max text tokens per synthesis segment",
     )
+    parser.add_argument(
+        "--duration-factor",
+        type=float,
+        default=1.0,
+        help="Speech duration factor, 0.5-2.0 (>1 is slower, default: 1.0)",
+    )
     parser.add_argument("--bf16", action="store_true", help="Use bfloat16 on GPU")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing mp3 files")
     parser.add_argument("--verbose", action="store_true", help="Verbose IndexTTS output")
@@ -87,6 +93,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if not 0.5 <= args.duration_factor <= 2.0:
+        sys.exit("--duration-factor must be between 0.5 and 2.0")
 
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
@@ -149,6 +157,7 @@ def main():
                     output_path=str(wav_path),
                     verbose=args.verbose,
                     max_text_tokens_per_segment=args.max_tokens,
+                    duration_factor=args.duration_factor,
                 )
                 if not wav_path.is_file():
                     raise RuntimeError("IndexTTS did not produce a wav file")

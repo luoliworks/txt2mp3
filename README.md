@@ -40,7 +40,9 @@ The default voice is `examples/voice_11.wav`. Override it with `--voice`:
 convert.bat --voice examples\voice_06.wav
 ```
 
+`voice_11.wav` is a female voice (default, high pitch).
 `voice_06.wav` is a male voice.
+`voice_09.wav` is a female voice.
 
 All official voice samples are in `examples/`; open `examples/listen.html` in a
 browser to preview them.

@@ -77,8 +77,18 @@ Chapters are detected at the start of a line using any of these heading formats:
 - Arabic numerals: `第1章`, `第12章`
 - Chinese numerals: `第一章`, `第十二章`, `第一百零一章`
 - English: `Chapter 1`, `CHAPTER 4`
+- Other units: `第三回`, `第5话`, `第6节`
+- Special chapters without a number: `序章`, `序言`, `楔子`, `引子`, `前言`, `开篇`,
+  `尾声`, `后记`, `终章`, `后日谈`, `大结局`, `番外` / `外传` (optionally with a
+  number, e.g. `番外一`). The keyword must be the whole line, or be followed by a
+  separator or space and a short title (up to 30 characters).
 
 Each chapter is written to `novel/NNNN.txt` (zero-padded chapter number).
+Special chapters are attached to the previous numbered chapter, e.g. `0100_1.txt`
+(a prologue before chapter 1 is `0000_1.txt`), so they sort and play in book
+order. If a chapter number repeats, the later one also gets a `_1`, `_2`, ...
+suffix instead of overwriting the earlier file. Text before the first heading is
+not exported.
 
 > Note: `novel/` is recreated on every run, so previous output is removed.
 
@@ -111,6 +121,39 @@ Options:
 > CPU note: without an NVIDIA GPU IndexTTS runs on CPU at roughly 18x real time
 > (a 4-second clip takes ~70 seconds here). Converting a whole novel will take a
 > long time; a CUDA GPU is strongly recommended.
+
+## Running on Google Colab
+
+[colab.ipynb](colab.ipynb) runs the whole pipeline on Google Colab (target: L4 GPU). Open it in Colab via **File → Open notebook → GitHub** and
+enter `luoliworks/txt2mp3`, then choose **Runtime → Change runtime type → L4 GPU**
+and run the cells in order:
+
+1. Check the GPU, CUDA version (must be 12.8 or newer) and ffmpeg.
+2. Mount Google Drive. MP3 files are written to `MyDrive/txt2mp3/mp3`
+   (edit `OUTPUT_DIR` to change it), so they survive a disconnect.
+3. Clone the repo, install `uv` and run `uv sync` (uv installs Python 3.11 itself).
+4. Download the IndexTTS-2.5 weights (~10 GB). They are downloaded in every new
+   session; they are intentionally not cached on Drive.
+5. Provide `novel.txt`: upload it from your computer, or copy it from Drive
+   (commented option in the cell).
+6. Check `novel.txt`.
+7. Convert it to UTF-8 and split it into chapters.
+8. Convert the chapters to MP3 with `--bf16`, written to Drive. An existing MP3
+   with the same name is backed up as `-Copy`, as in the local workflow.
+9. Finish: play a beep in your browser, wait 5 minutes, flush and unmount Drive,
+   then disconnect the runtime so it stops billing. Press the stop button of the
+   cell within the 5 minutes to cancel the auto-disconnect. Cells 8 and 9 are in
+   the same cell, so one click runs both.
+
+Notes:
+
+- The beep is played by the page, so the browser may block it if the tab is in
+  the background or muted. Keep the tab in the foreground or click the page once.
+- The runtime is disconnected even if the conversion failed. Check the output for
+  `Failed` and stop the cell within the 5 minutes if you want to investigate.
+- To convert another batch in the same session, re-run cells 5 to 8. Keep chapter
+  numbers continuous across batches (e.g. 1–100, then 101–200); otherwise the new
+  MP3 files get the same names and the old ones are renamed to `-Copy`.
 
 ## Running on a CUDA machine
 

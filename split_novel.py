@@ -18,11 +18,20 @@ CN_DIGITS = {
 }
 CN_UNITS = {"十": 10, "百": 100, "千": 1000, "万": 10000}
 
-# 匹配行首的章节标题：第1章、第十二章、Chapter 1
+# 特殊章节关键字：序章、楔子、番外一、尾声 等（不带章节号）
+SPECIAL_KEYWORDS = (
+    r"(?:序章|序言|楔子|引子|前言|开篇|尾声|后记|终章|后日谈|大结局|完本感言|完结感言"
+    r"|(?:番外|外传)篇?[0-9零〇一二两三四五六七八九十百]*)"
+)
+# 关键字之后必须直接结束，或跟分隔符/空白再接一段短标题，避免误匹配正文
+SPECIAL_REST = r"(?:(?:[ \t\u3000]+|[：:｜|\-—、·.．]+)[^\n]{0,30})?"
+
+# 匹配行首的章节标题：第1章、第十二章、第三回、Chapter 1，以及序章/番外等特殊章节
 CHAPTER_PATTERN = re.compile(
     r"^[ \t\u3000]*(?P<title>"
-    r"第[ \t\u3000]*(?P<cn>[0-9]+|[零〇一二两三四五六七八九十百千万]+)[ \t\u3000]*章[^\n]*"
+    r"第[ \t\u3000]*(?P<cn>[0-9]+|[零〇一二两三四五六七八九十百千万]+)[ \t\u3000]*[章回话節节][^\n]*"
     r"|Chapter[ \t]+(?P<en>[0-9]+)\b[^\n]*"
+    rf"|(?P<special>{SPECIAL_KEYWORDS}{SPECIAL_REST})"
     r")[ \t]*$",
     re.IGNORECASE | re.MULTILINE,
 )
@@ -54,8 +63,9 @@ def cn_to_int(text):
 
 TITLE_PAUSE_PATTERN = re.compile(
     r"^(?P<marker>"
-    r"第[ \t\u3000]*(?:[0-9]+|[零〇一二两三四五六七八九十百千万]+)[ \t\u3000]*章"
+    r"第[ \t\u3000]*(?:[0-9]+|[零〇一二两三四五六七八九十百千万]+)[ \t\u3000]*[章回话節节]"
     r"|Chapter[ \t]+[0-9]+\b"
+    rf"|{SPECIAL_KEYWORDS}"
     r")(?P<rest>.*)$",
     re.IGNORECASE,
 )
@@ -63,6 +73,8 @@ TITLE_REST_SEPARATORS = re.compile(r"^[ \t\u3000｜|:：、,，.。·\-—~～�
 
 
 def get_chapter_number(match):
+    if match.group("special") is not None:
+        return None
     cn = match.group("cn")
     en = match.group("en")
     if en is not None:
@@ -89,7 +101,20 @@ def split_chapters(content):
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
         body = content[start:end].strip()
-        yield get_chapter_number(match), title, body
+        yield get_chapter_number(match), title, body, match.group("special") is not None
+
+
+def unique_name(base, used, force_suffix):
+    """序号相同或特殊章节追加 _1、_2…，保证文件名唯一且排序在对应章节之后。"""
+    if not force_suffix and base not in used:
+        used.add(base)
+        return base
+    suffix = 1
+    while f"{base}_{suffix}" in used:
+        suffix += 1
+    name = f"{base}_{suffix}"
+    used.add(name)
+    return name
 
 
 def main():
@@ -105,11 +130,17 @@ def main():
     with open("novel.txt", "r", encoding="utf-8-sig") as f:
         content = f.read()
 
-    for chapter_number, title, body in split_chapters(content):
-        if chapter_number is None:
+    used = set()
+    last_number = 0
+    for chapter_number, title, body, is_special in split_chapters(content):
+        if is_special:
+            # 特殊章节挂在前一个编号章节之后，如 0100_1.txt；开头的序章为 0000_1.txt
+            filename = unique_name(f"{last_number:04d}", used, True) + ".txt"
+        elif chapter_number is None:
             filename = re.sub(r"[^\w]", "_", title) + ".txt"
         else:
-            filename = f"{chapter_number:04d}.txt"  # 填充为4位数字
+            last_number = chapter_number
+            filename = unique_name(f"{chapter_number:04d}", used, False) + ".txt"
 
         filepath = os.path.join(output_dir, filename)
 

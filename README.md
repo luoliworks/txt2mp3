@@ -66,9 +66,12 @@ without bf16). On every run it first converts `novel.txt` to UTF-8, clears
 in `mp3/`. Existing MP3 files are preserved and backed up with a `-Copy` suffix.
 
 ## Split novel into chapters
-Place `novel.txt` in the project root, then run:
+Place `novel.txt` in the project root. On Windows, run `split_novel.bat` (or
+double-click it): it converts `novel.txt` to UTF-8 if needed and then splits it
+into `novel/`. Or run the scripts manually:
 
 ```bash
+uv run python txt2utf8.py
 uv run python split_novel.py
 ```
 
